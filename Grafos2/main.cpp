@@ -18,10 +18,9 @@ int main(int argc, const char * argv[])
     List<int> l;
     Grafo p;
     
-    for (int i=0; i<20; i++) {
-        p.agregarVertice(i);
-        
-    }
+    for (int i=0; i<20; i++) 
+     p.agregarVertice(i); 
+  
     
     for (int i=0; i<9; i++)
     {

@@ -10,8 +10,9 @@
 #define __Grafos2__Grafo__
 
 #include <iostream>
+#include <climits>
 #include "List.h"
-#define Vertice int
+#define Vertice uint
 #define self (*this)
 
 
@@ -80,7 +81,7 @@ public:
         NodoVertice* nv, *nw, *aux;
         nv=nw=NULL;
         
-        for (int i=0; i<orden(); i++)
+        for (uint i=0; i<orden(); i++)
         {
             aux = g[i];
             if      (aux->tag() == v) nv=aux;
@@ -245,32 +246,80 @@ public:
             dist.addInfoAtPos(INT_MAX, i);
             pred.addInfoAtPos(0, i);
         }
-        color.setInfoAtPos("gris", s);
-        dist.setInfoAtPos(0, s);
-        c.addInfoAtPos(s, c.lenght());
-        
-        
+        color[s] = "gris";
+        dist[s]  = 0;
+        c.enqueue(s);
+
         while (!c.isEmpty())
         {
-            u = c[0];
-            c.deleteAtPos(0);
+            u = c.front();
+            c.dequeue();
             l = *sucesores(u);
             
             while (!l.isEmpty())
             {
-                v = l[1];
-                l.deleteAtPos(1);
+                v = l.front();
+                l.dequeue();
                 
                 if (color[v] == "blanco")
                 {
-                    color.setInfoAtPos("gris", v);
-                    dist.setInfoAtPos(dist[u]+1, v);
-                    pred.setInfoAtPos(u, v);
-                    c.addInfoAtPos(v, c.lenght());
+                    color[v] = "gris";
+                    dist[v]  = dist[u]+1;
+                    pred[v]  = u;
+                    c.enqueue(v);
                 }
             }
-            color.setInfoAtPos("negro", u);
+            color[u] = "negro";
         }
+    }
+    
+    void DFS(List<int>& pred,List<int>& tdesc,List<int>& tfinal)
+    {
+        Vertice u;
+        int tiempo;
+        List<string> color;
+        
+        for (int i = 0; i<orden(); i++)
+        {
+            color.addInfoAtPos("blanco", i);
+            pred.addInfoAtPos(0, u);
+        }
+        tiempo = 0;
+        
+        for (int i = 0; i<orden(); i++)
+        {
+            if (color[u] == "blanco")
+            {
+                this->DFS_Visitar(u,pred,tdesc,tfinal,color,tiempo);
+            }
+        }
+    }
+    
+    void DFS_Visitar(Vertice u, List<int>& pred, List<int>& tdesc, List<int>& tfinal,List<string>& color, int& tiempo)
+    {
+        List<Vertice> l;
+        Vertice v;
+        
+        color[u] = "gris";
+        tiempo++;
+        tdesc[u] = tiempo;
+        
+        l = *sucesores(u);
+        
+        while (!l.isEmpty())
+        {
+            v = l.front();
+            l.dequeue();
+            
+            if (color[v] == "blanco")
+            {
+                pred[v] = u;
+                this->DFS_Visitar(v,pred,tdesc,tfinal,color,tiempo);
+            }
+        }
+        color[u] = "negro";
+        tiempo++;
+        tfinal[u] = tiempo;
     }
     
     

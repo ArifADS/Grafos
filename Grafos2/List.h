@@ -1,5 +1,8 @@
 #ifndef _H_Lista_
 #define _H_Lista_
+#define uint int
+#include <iostream>
+
 using namespace std;
 
 template <class T>
